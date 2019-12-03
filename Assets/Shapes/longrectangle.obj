@@ -1,0 +1,16 @@
+o longrectangle
+v -1 0 .6
+v 1 0 .6
+v 1 0 -.6
+v -1 0 -.6
+v -.8 0 .4
+v .8 0 .4
+v .8 0 -.4
+v -.8 0 -.4
+vn 0 -1 0
+g longrectangle
+f 1 2 6 5
+f 2 3 7 6
+f 8 7 3 4
+f 1 5 8 4
+f 8 5 6 7

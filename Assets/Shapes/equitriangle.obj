@@ -1,0 +1,6 @@
+o equitriangle
+v 0 0 .5
+v .9 0 0
+v -.9 0 0
+g equitriangle
+f 1 2 3
