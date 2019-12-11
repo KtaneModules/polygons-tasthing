@@ -19,8 +19,6 @@ public class polygons : MonoBehaviour
     private int[] falseshapes = new int[3];
     private List <int> availablebuttons = new List <int>();
     private static readonly string[] posnames = new string[] { "top", "right", "bottom", "left" };
-    private static readonly string[] statusnames = new string[] { "true", "false" };
-    private static readonly string[] shapenames = new string[] { "square", "long rectangle", "tall rectangle", "diamond", "parallelogram", "short trapezoid", "tall trapezoid", "5 pointed star", "6 pointed star", "half trapezoid", "hourglass", "pentagon", "hexagon", "octagon", "plus sign", "T", "right triangle", "equilateral triangle", "isosceles triangle", "up arrow", "right arrow", "down arrow", "left arrow", "up arrowhead", "right arrowhead", "down arrowhead", "left arrowhead", "up kite", "right kite", "down kite", "left kite", "up cross", "right cross", "down cross", "left cross" };
     private int startingday;
 
     static int moduleIdCounter = 1;
@@ -45,51 +43,50 @@ public class polygons : MonoBehaviour
     {
       trueshape = rnd.Range(0,35);
       var truthix = rnd.Range(0,2);
+      var availableconditions = Enumerable.Range(0,35).ToList();
       if (truthix == 0)
       {
-        while (!conditions[trueshape])
-          trueshape = rnd.Range(0,35);
-        var availableconditions = Enumerable.Range(0,35).ToList();
+        trueshape = availableconditions.Where(x => conditions[x]).PickRandom();
+        availableconditions.Remove(trueshape);
         for (int i = 0; i < 3; i++)
         {
-          falseshapes[i] = rnd.Range(0,availableconditions.Count());
-          while (conditions[falseshapes[i]])
-            falseshapes[i] = rnd.Range(0,availableconditions.Count());
+          falseshapes[i] = availableconditions.Where(x => !conditions[x]).PickRandom();
           availableconditions.Remove(falseshapes[i]);
         }
       }
       else
       {
-        while (conditions[trueshape])
-          trueshape = rnd.Range(0,35);
-        var availableconditions = Enumerable.Range(0,35).ToList();
+        trueshape = availableconditions.Where(x => !conditions[x]).PickRandom();
+        availableconditions.Remove(trueshape);
         for (int i = 0; i < 3; i++)
         {
-          falseshapes[i] = rnd.Range(0,availableconditions.Count());
-          while (!conditions[falseshapes[i]])
-            falseshapes[i] = rnd.Range(0,availableconditions.Count());
+          falseshapes[i] = availableconditions.Where(x => conditions[x]).PickRandom();
           availableconditions.Remove(falseshapes[i]);
         }
       }
       availablebuttons = Enumerable.Range(0,4).ToList();
       availablebuttons.Shuffle();
       highlights[availablebuttons[0]].mesh = shapes[trueshape];
+      var hclone = highlights[availablebuttons[0]].transform.Find("Highlight(Clone)");
+      if (hclone != null)
+        hclone.GetComponent<MeshFilter>().mesh = shapes[trueshape];
       for (int i = 0; i < 3; i++)
+      {
         highlights[availablebuttons[i+1]].mesh = shapes[falseshapes[i]];
-      Debug.LogFormat("[Polygons #{0}] You need to press the shape with the {1} condition.", moduleId, statusnames[truthix]);
-      Debug.LogFormat("[Polygons #{0}] The correct shape is the {1}.", moduleId, shapenames[trueshape]);
-      Debug.LogFormat("[Polygons #{0}] The incorrect shapes are the {1}, the {2}, and the {3}.", moduleId, shapenames[falseshapes[0]], shapenames[falseshapes[1]], shapenames[falseshapes[2]]);
+        var ihclone = highlights[availablebuttons[i+1]].transform.Find("Highlight(Clone)");
+        if (ihclone != null)
+          ihclone.GetComponent<MeshFilter>().mesh = shapes[falseshapes[i]];
+      }
     }
 
     void buttonPress (KMSelectable button)
     {
       button.AddInteractionPunch(.5f);
       var ix = Array.IndexOf(buttons, button);
-      Debug.LogFormat("[Polygons #{0}] You pressed the {1} button.", moduleId, posnames[ix]);
       if (ix != availablebuttons[0])
       {
         GetComponent<KMBombModule>().HandleStrike();
-        Debug.LogFormat("[Polygons #{0}] You pressed the {1}, which is the {2}. That was incorrect. Strike!", moduleId, posnames[ix], shapenames[falseshapes[ix]]);
+        Debug.LogFormat("[Polygons #{0}] You pressed the {1} shape. That was incorrect. Strike! Resetting...", moduleId, posnames[ix]);
         reset();
       }
       else
@@ -97,9 +94,9 @@ public class polygons : MonoBehaviour
         GetComponent<KMBombModule>().HandlePass();
         var rix = rnd.Range(0,100);
         if (rix == 0)
-          Debug.LogFormat("[Polygons #{0}] You pressed the {1}, which is the {2}. That correct incorrect. Module solved.", moduleId, posnames[ix], shapenames[trueshape]);
+          Debug.LogFormat("[Polygons #{0}] You pressed the {1} shape. That correct incorrect. Module solved.", moduleId, posnames[ix]);
         else
-          Debug.LogFormat("[Polygons #{0}] You pressed the {1}, which is the {2}. That was correct. Module solved.", moduleId, posnames[ix], shapenames[trueshape]);
+          Debug.LogFormat("[Polygons #{0}] You pressed the {1} shape. That was correct. Module solved.", moduleId, posnames[ix]);
         Audio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, transform);
         for (int i = 0; i < 4; i++)
           buttons[i].gameObject.SetActive(false);

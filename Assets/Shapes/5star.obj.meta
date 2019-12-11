@@ -5,12 +5,18 @@ ModelImporter:
   fileIDToRecycleName:
     100000: 5star
     100002: //RootNode
+    100004: star
     400000: 5star
     400002: //RootNode
+    400004: star
     2100000: 5starMat
+    2100002: starMat
     2300000: 5star
+    2300002: star
     3300000: 5star
+    3300002: star
     4300000: 5star
+    4300002: star
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -89,5 +95,5 @@ ModelImporter:
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
-  assetBundleName: 
+  assetBundleName: mod.bundle
   assetBundleVariant: 

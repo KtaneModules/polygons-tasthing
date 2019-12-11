@@ -11,10 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: scavengerHunt
-  title: Scavenger Hunt
+  id: polygons
+  title: Polygons
   author: TasThing
-  description: 
-  version: 
+  description: 'No flavor text this time. You need to come up with that. And the manual.
+    Because this is a manual deduction challenge!
+
+
+    Idea and implementation by TasThing.'
+  version: 1.0
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: 63b3fd3fe77cef945a879fe8499f2fdd, type: 3}

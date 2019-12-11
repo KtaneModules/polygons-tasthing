@@ -5,12 +5,18 @@ ModelImporter:
   fileIDToRecycleName:
     100000: 6star
     100002: //RootNode
+    100004: hexagram
     400000: 6star
     400002: //RootNode
+    400004: hexagram
     2100000: 6starMat
+    2100002: hexagramMat
     2300000: 6star
+    2300002: hexagram
     3300000: 6star
+    3300002: hexagram
     4300000: 6star
+    4300002: hexagram
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -89,5 +95,5 @@ ModelImporter:
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
-  assetBundleName: 
+  assetBundleName: mod.bundle
   assetBundleVariant: 
