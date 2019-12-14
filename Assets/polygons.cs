@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using KModkit;
 using rnd = UnityEngine.Random;
@@ -19,6 +20,8 @@ public class polygons : MonoBehaviour
     private int[] falseshapes = new int[3];
     private List <int> availablebuttons = new List <int>();
     private static readonly string[] posnames = new string[] { "top", "right", "bottom", "left" };
+    private static readonly string[] statusnames = new string[] { "true", "false" };
+    private static readonly string[] shapenames = new string[] { "5 pointed star", "6 pointed star", "diamond", "down arrow", "down arrowhead", "down cross", "down kite", "equi triangle", "half trapezoid", "hexagon", "hourglass", "iso triangle", "left arrow", "left arrowhead", "left cross", "left kite", "long rectangle", "octagon", "parallelogram", "pentagon", "plus", "right arrow", "right arrowhead", "right cross", "right kite", "right triangle", "short trapezoid", "square", "T", "tall rectangle", "tall trapezoid", "up arrow", "up arrowhead", "up cross", "up kite" };
     private int startingday;
 
     static int moduleIdCounter = 1;
@@ -77,6 +80,9 @@ public class polygons : MonoBehaviour
         if (ihclone != null)
           ihclone.GetComponent<MeshFilter>().mesh = shapes[falseshapes[i]];
       }
+      Debug.LogFormat("[Polygons #{0}] You need to press the shape with the {1} condition.", moduleId, statusnames[truthix]);
+      Debug.LogFormat("[Polygons #{0}] The correct shape is the {1}.", moduleId, shapenames[trueshape]);
+      Debug.LogFormat("[Polygons #{0}] The incorrect shapes are the {1}, the {2}, and the {3}.", moduleId, shapenames[falseshapes[0]], shapenames[falseshapes[1]], shapenames[falseshapes[2]]);
     }
 
     void buttonPress (KMSelectable button)
@@ -176,5 +182,71 @@ public class polygons : MonoBehaviour
         conditions[33] = true;
       if (bomb.GetSolvableModuleNames().Any(mdl => mdl == "Blind Alley" || mdl == "Tap Code" || mdl == "A Mistake" || mdl == "Braille"))
         conditions[34] = true;
+    }
+
+    //twitch plays
+    #pragma warning disable 414
+    private readonly string TwitchHelpMessage = @"!{0} cycle [Cycles through all of the shapes] | !{0} press <pos> [Presses the shape in the specified position] | Valid positions are top(t), right(r), bottom(b), and left(l)";
+    #pragma warning restore 414
+    IEnumerator ProcessTwitchCommand(string command)
+    {
+        if (Regex.IsMatch(command, @"^\s*cycle\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            yield return null;
+            for (int i = 0; i < 4; i++)
+            {
+                yield return "trycancel Shape cycling has been halted due to a request to cancel!";
+                yield return new WaitForSeconds(.25f);
+                var obj = highlights[i].gameObject;
+                var hClone = obj.transform.Find("Highlight(Clone)");
+                if (hClone != null)
+                    obj = hClone.gameObject ?? obj;
+                obj.SetActive(true);
+                yield return new WaitForSeconds(2.25f);
+                obj.SetActive(false);
+                yield return new WaitForSeconds(.25f);
+            }
+            yield break;
+        }
+        string[] parameters = command.Split(' ');
+        if (Regex.IsMatch(parameters[0], @"^\s*press\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+        {
+            if(parameters.Length == 1)
+                yield return "sendtochaterror Please specify the position of the shape you want to press!";
+            else if (parameters.Length > 2)
+                yield return "sendtochaterror Too many arguements!";
+            else
+            {
+                if(parameters[1].EqualsIgnoreCase("top") || parameters[1].EqualsIgnoreCase("t"))
+                {
+                    yield return null;
+                    buttons[0].OnInteract();
+                }
+                else if(parameters[1].EqualsIgnoreCase("right") || parameters[1].EqualsIgnoreCase("r"))
+                {
+                    yield return null;
+                    buttons[1].OnInteract();
+                }
+                else if(parameters[1].EqualsIgnoreCase("bottom") || parameters[1].EqualsIgnoreCase("b"))
+                {
+                    yield return null;
+                    buttons[2].OnInteract();
+                }
+                else if(parameters[1].EqualsIgnoreCase("left") || parameters[1].EqualsIgnoreCase("l"))
+                {
+                    yield return null;
+                    buttons[3].OnInteract();
+                }
+                else
+                    yield return "sendtochaterror The specified position '"+parameters[1]+"' is not a valid position!";
+            }
+            yield break;
+        }
+    }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        buttons[availablebuttons[0]].OnInteract();
+        yield return true;
     }
 }
