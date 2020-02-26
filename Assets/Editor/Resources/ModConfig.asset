@@ -14,11 +14,10 @@ MonoBehaviour:
   id: polygons
   title: Polygons
   author: TasThing
-  description: 'No flavor text this time. You need to come up with that. And the manual.
-    Because this is a manual deduction challenge!
-
-
-    Idea and implementation by TasThing.'
+  description: "People often say that you don\u2019t need geometry in the real world.
+    Those people are now blown up.\r\n\r\nThis module was a manual deduction challenge
+    that has now ended.\r\nIdea and implementation by TasThing.\r\n\r\nManual HTML:
+    https://ktane.timwi.de/HTML/Polygons.html\r\nManual PDF: https://ktane.timwi.de/PDF/Polygons.pdf"
   version: 1.0
   outputFolder: build
   previewImage: {fileID: 2800000, guid: df76796e59ebd004d84adb4e8b8c221a, type: 3}
