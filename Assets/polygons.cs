@@ -185,9 +185,9 @@ public class polygons : MonoBehaviour
     }
 
     // Twitch Plays
-#pragma warning disable 414
+    #pragma warning disable 414
     private readonly string TwitchHelpMessage = @"!{0} cycle [Cycles through all of the shapes] | !{0} press <pos> [Presses the shape in the specified position] | Valid positions are top(t), right(r), bottom(b), and left(l)";
-#pragma warning restore 414
+    #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string command)
     {
         if (Regex.IsMatch(command, @"^\s*cycle\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
